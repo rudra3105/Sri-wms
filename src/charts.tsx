@@ -1,0 +1,17 @@
+import React from 'react';
+import { ResponsiveContainer, LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, AreaChart, Area, Cell } from 'recharts';
+export const PAL = { teal: '#00A6A6', orange: '#F28C28', navy: '#27425f', violet: '#7c5cbf', rose: '#c0475f', green: '#4d9a3f', grid: '#e8edf3', text: '#718096' };
+export const SERIES = [PAL.teal, PAL.orange, PAL.navy, PAL.violet, PAL.rose, PAL.green];
+const axis = { tick: { fontSize: 11, fill: PAL.text }, axisLine: false as const, tickLine: false as const };
+const Tip = ({ active, payload, label, fmt }: any) => active && payload?.length ? <div className="rounded-lg bg-navy text-white text-xs px-3 py-2 shadow-lg"><div className="font-semibold mb-1">{label}</div>{payload.map((p: any, i: number) => <div key={i} className="flex items-center gap-2"><span className="h-2 w-2 rounded-full" style={{ background: p.color || p.fill }} />{p.name}: <b className="tabular-nums">{fmt ? fmt(p.value) : Number(p.value).toLocaleString('en-IN')}</b></div>)}</div> : null;
+export function TrendChart({ data, keys, height = 230, fmt, area }: { data: any[]; keys: { k: string; name: string; color?: string }[]; height?: number; fmt?: (n: number) => string; area?: boolean }) {
+  const C: any = area ? AreaChart : LineChart; const S: any = area ? Area : Line;
+  return <ResponsiveContainer width="100%" height={height}><C data={data} margin={{ top: 6, right: 8, left: -12, bottom: 0 }}><CartesianGrid stroke={PAL.grid} vertical={false} /><XAxis dataKey="day" {...axis} interval="preserveStartEnd" /><YAxis {...axis} width={44} tickFormatter={fmt as any} /><Tooltip content={<Tip fmt={fmt} />} />{keys.length > 1 && <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 12 }} />}
+    {keys.map((k, i) => <S key={k.k} type="monotone" dataKey={k.k} name={k.name} stroke={k.color || SERIES[i]} fill={k.color || SERIES[i]} fillOpacity={area ? 0.12 : 0} strokeWidth={2} dot={false} activeDot={{ r: 4, stroke: '#fff', strokeWidth: 2 }} />)}</C></ResponsiveContainer>;
+}
+export function BarsChart({ data, keys, height = 230, x = 'name', fmt, horizontal, colorByIndex, stack }: { data: any[]; keys: { k: string; name: string; color?: string }[]; height?: number; x?: string; fmt?: (n: number) => string; horizontal?: boolean; colorByIndex?: boolean; stack?: boolean }) {
+  return <ResponsiveContainer width="100%" height={height}><BarChart data={data} layout={horizontal ? 'vertical' : 'horizontal'} margin={{ top: 6, right: 12, left: horizontal ? 8 : -12, bottom: 0 }} barCategoryGap="28%"><CartesianGrid stroke={PAL.grid} horizontal={!horizontal} vertical={!!horizontal} />
+    {horizontal ? <><XAxis type="number" {...axis} tickFormatter={fmt as any} /><YAxis type="category" dataKey={x} {...axis} width={120} /></> : <><XAxis dataKey={x} {...axis} interval={0} /><YAxis {...axis} width={44} tickFormatter={fmt as any} /></>}
+    <Tooltip content={<Tip fmt={fmt} />} cursor={{ fill: 'rgba(16,28,43,.04)' }} />{keys.length > 1 && <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 12 }} />}
+    {keys.map((k, i) => <Bar key={k.k} dataKey={k.k} name={k.name} stackId={stack ? 's' : undefined} fill={k.color || SERIES[i]} radius={stack ? 0 : horizontal ? [0, 4, 4, 0] : [4, 4, 0, 0]} maxBarSize={28}>{colorByIndex && data.map((_, di) => <Cell key={di} fill={SERIES[di % SERIES.length]} />)}</Bar>)}</BarChart></ResponsiveContainer>;
+}

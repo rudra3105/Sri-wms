@@ -1,0 +1,16 @@
+@import '@fontsource/inter/latin-400.css';
+@import '@fontsource/inter/latin-500.css';
+@import '@fontsource/inter/latin-600.css';
+@import '@fontsource/inter/latin-700.css';
+@tailwind base; @tailwind components; @tailwind utilities;
+html,body,#root{height:100%} body{background:#F5F7FA;font-variant-numeric:tabular-nums;letter-spacing:-.003em;color:#182433;font-family:Inter,system-ui,sans-serif;font-size:14px}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#cbd5e0;border-radius:8px}
+.tbl th{font-size:12px;color:#667385;font-weight:500;text-align:left;padding:7px 10px;border-bottom:1px solid #dfe3ea;white-space:nowrap}
+.tbl td{padding:8px 10px;border-bottom:1px solid #eef0f4;vertical-align:middle;white-space:nowrap}
+.tbl td.wrap{white-space:normal}
+.tbl tr:hover td{background:#fafbfd}
+@keyframes pop{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:none}}
+.pop{animation:pop .15s ease-out}
+@keyframes pulseRed{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.4)}50%{box-shadow:0 0 0 10px rgba(220,38,38,0)}}
+.pulse-red{animation:pulseRed 1.4s infinite}
+@media print{ body *{visibility:hidden} .print-area,.print-area *{visibility:visible} .print-area{position:absolute;left:0;top:0;width:100%;box-shadow:none!important} .no-print{display:none!important} }
